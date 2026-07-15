@@ -1,40 +1,32 @@
-import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
 
 /**
- * check mobile device in server
+ * check mobile device (compatible with static export / client-side)
  */
 export const isMobileDevice = () => {
-  if (typeof process === 'undefined') {
-    throw new Error('[Server method] you are importing a server-only module outside of server');
+  if (typeof window !== 'undefined') {
+    const device = new UAParser(window.navigator.userAgent || '').getDevice();
+    return device.type === 'mobile';
   }
-
-  const { get } = headers();
-  const ua = get('user-agent');
-
-  // console.debug(ua);
-  const device = new UAParser(ua || '').getDevice();
-
-  return device.type === 'mobile';
+  return false;
 };
 
 /**
- * check mobile device in server
+ * get device info (compatible with static export / client-side)
  */
 export const gerServerDeviceInfo = () => {
-  if (typeof process === 'undefined') {
-    throw new Error('[Server method] you are importing a server-only module outside of server');
+  if (typeof window !== 'undefined') {
+    const parser = new UAParser(window.navigator.userAgent || '');
+    return {
+      browser: parser.getBrowser().name,
+      isMobile: isMobileDevice(),
+      os: parser.getOS().name,
+    };
   }
 
-  const { get } = headers();
-  const ua = get('user-agent');
-
-  // console.debug(ua);
-  const parser = new UAParser(ua || '');
-
   return {
-    browser: parser.getBrowser().name,
-    isMobile: isMobileDevice(),
-    os: parser.getOS().name,
+    browser: 'Chrome',
+    isMobile: false,
+    os: 'Windows',
   };
 };

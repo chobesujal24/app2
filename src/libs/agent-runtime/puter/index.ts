@@ -1,6 +1,6 @@
 import { LobeRuntimeAI } from '../BaseAI';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
-import { AgentRuntimeError } from '../error';
+import { AgentRuntimeError } from '../utils/createError';
 import { ChatErrorType } from '@/types/fetch';
 
 // Type declarations for Puter global
